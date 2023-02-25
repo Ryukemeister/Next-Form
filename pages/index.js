@@ -26,6 +26,9 @@ export default function Home() {
 
   async function handleClick(event) {
     event.preventDefault();
+
+    // Check if the user schema defined matches with the argument passed
+    // If schema is valid redirect to success page, else show an alert
     const isValid = await userSchema.isValid(allValues);
 
     if (isValid) {
