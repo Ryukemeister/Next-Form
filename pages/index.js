@@ -55,8 +55,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex my-5 font-poppins flex-col gap-y-3 w-[100%] h-[100%] justify-center items-center">
-        <h1 className="font-bold  text-xl sm:text-2xl">Create an Account</h1>
+      <main className="flex font-poppins flex-col gap-y-3 h-screen w-screen justify-center items-center">
+        <h1 className="font-bold text-xl sm:text-2xl">Create an Account</h1>
         <form className="flex pt-3 sm:pt-5 px-5 sm:px-8 pb-6 sm:pb-16 flex-col border-2 border-emerald-500 rounded-xl w-[80%] sm:w-[410px]">
           <FormComponent
             labelName="First Name"
