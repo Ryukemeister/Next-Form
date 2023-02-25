@@ -6,6 +6,7 @@ function TestElement({
   placeholderText,
   inputName,
   checkedValue,
+  error,
 }) {
   if (inputType === "radio") {
     return (
@@ -33,6 +34,9 @@ function TestElement({
           className="border-gray-300 border-[1.4px] mt-[2px] px-2 py-1 focus:border-teal-500 outline-0"
           type={inputType}
         />
+        {error ? (
+          <h1 className="text-red-500 mt-1 font-poppins font-bold">{error}</h1>
+        ) : null}
       </div>
     );
   }
