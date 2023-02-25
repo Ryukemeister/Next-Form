@@ -1,51 +1,45 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import { useRouter } from "next/router";
 import FormComponent from "@/components/formComponent";
 import FormButton from "@/components/formBtn";
-import { userSchema } from "@/validation/userValidation";
 import { motion as m } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
-  const [allValues, setAllValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    subscription: "free",
-  });
 
-  function handleChange(event) {
-    setAllValues((prevValue) => {
-      return {
-        ...prevValue,
-        [event.target.name]: event.target.value,
-      };
-    });
-  }
+  const formik = useFormik({
+    // Setting up initial values for our input fields
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      subscription: "free",
+    },
 
-  async function handleClick(event) {
-    event.preventDefault();
+    //Setting up user validation
+    validationSchema: yup.object({
+      firstName: yup.string().required("First Name is a required property"),
+      lastName: yup.string().required("Last Name is a required property"),
+      email: yup
+        .string()
+        .email("Please enter a valid email address")
+        .required("Email is required"),
+    }),
 
-    // Check if the user schema defined matches with the argument passed
-    // If schema is valid redirect to success page, else show an alert
-    const isValid = await userSchema.isValid(allValues);
-
-    if (isValid) {
-      router.push({ pathname: "/success", query: allValues });
-
-      setAllValues({
+    // Setting up the handleClick for submission
+    onSubmit: (values) => {
+      console.log(values);
+      router.push({ pathname: "/success", query: values });
+      values = {
         firstName: "",
         lastName: "",
         email: "",
         subscription: "free",
-      });
-    } else {
-      alert(
-        "ERROR: Form input is not valid, you have may have left some fields incomplete. Please check if the input fields you enter are valid and not empty."
-      );
-    }
-  }
+      };
+    },
+  });
 
   return (
     <m.div>
@@ -58,27 +52,33 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex font-poppins flex-col gap-y-3 h-screen w-screen justify-center items-center">
+      <main className="flex font-poppins my-5 flex-col gap-y-3 h-screen w-screen justify-center items-center">
         <h1 className="font-bold text-xl sm:text-2xl">Create an Account</h1>
-        <form className="flex pt-3 sm:pt-5 px-5 sm:px-8 pb-6 sm:pb-16 flex-col border-2 border-emerald-500 rounded-xl w-[80%] sm:w-[410px]">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="flex pt-3 sm:pt-5 px-5 sm:px-8 pb-6 sm:pb-16 flex-col border-2 border-emerald-500 rounded-xl w-[80%] sm:w-[410px]"
+        >
           <FormComponent
             labelName="First Name"
-            handleChange={handleChange}
-            value={allValues.firstName}
+            handleChange={formik.handleChange}
+            value={formik.values.firstName}
+            error={formik.errors.firstName}
             inputName="firstName"
             inputType="text"
           />
           <FormComponent
             labelName="Last Name"
-            handleChange={handleChange}
-            value={allValues.lastName}
+            handleChange={formik.handleChange}
+            value={formik.values.lastName}
+            error={formik.errors.lastName}
             inputName="lastName"
             inputType="text"
           />
           <FormComponent
             labelName="Email"
-            handleChange={handleChange}
-            value={allValues.email}
+            handleChange={formik.handleChange}
+            value={formik.values.email}
+            error={formik.errors.email}
             inputName="email"
             inputType="email"
             placeholderText="samueljackson@gmail.com"
@@ -90,21 +90,21 @@ export default function Home() {
                 inputType="radio"
                 inputName="subscription"
                 labelName="Free - $0"
-                handleChange={handleChange}
+                handleChange={formik.handleChange}
                 value="free"
-                checkedValue={allValues.subscription === "free"}
+                checkedValue={formik.values.subscription === "free"}
               />
               <FormComponent
                 inputType="radio"
                 inputName="subscription"
                 labelName="Pro - $10"
-                handleChange={handleChange}
+                handleChange={formik.handleChange}
                 value="paid"
-                checkedValue={allValues.subscription !== "free"}
+                checkedValue={formik.values.subscription !== "free"}
               />
             </div>
           </div>
-          <FormButton btnName="Create Account" handleClick={handleClick} />
+          <FormButton btnName="Create Account" type="submit" />
         </form>
       </main>
     </m.div>
