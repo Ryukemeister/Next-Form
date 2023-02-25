@@ -20,8 +20,8 @@ export default function Home() {
 
     //Setting up user validation
     validationSchema: yup.object({
-      firstName: yup.string().required("First Name is a required property"),
-      lastName: yup.string().required("Last Name is a required property"),
+      firstName: yup.string().required("First Name is required"),
+      lastName: yup.string().required("Last Name is required"),
       email: yup
         .string()
         .email("Please enter a valid email address")
